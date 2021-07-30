@@ -13,3 +13,11 @@ test('json 接口返回数据格式正确',async()=>{
 
     expect(res.body.title).toBe('koa2 json')
 })
+
+
+// test('json 接口返回数据格式正确',async()=>{
+//     const res=await server.post('/login').send({
+//         userName:'zhangsan',
+//         password:'123'
+//     })
+// })
