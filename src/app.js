@@ -19,29 +19,29 @@ onerror(app)
 
 // middlewares
 app.use(bodyparser({
-  enableTypes:['json', 'form', 'text']
+    enableTypes:['json', 'form', 'text']
 }))
 app.use(json())
 app.use(logger())
 app.use(require('koa-static')(__dirname + '/public'))
 
 app.use(views(__dirname + '/views', {
-  extension: 'ejs'
+    extension: 'ejs'
 }))
 
-app.keys=['AFSDFSDFDFD'];
+app.keys=['AFSDFSDFDFD']
 app.use(session({
-  key:'weibo.sid',//cookie name 默认值 'koa.sid'
-  prefix:'weibo:sess:',//reids key 的前缀，默认值 'koa:sess:'
-  cookie:{
-    path:'/',
-    httpOnly:true,
-    maxAge:24 * 60 * 60 * 1000 //ms
-  },
-  store: redisStore({
-    all:`${REDIS_CONF.host}:${REDIS_CONF.port}`
-  })
-}));
+    key:'weibo.sid',//cookie name 默认值 'koa.sid'
+    prefix:'weibo:sess:',//reids key 的前缀，默认值 'koa:sess:'
+    cookie:{
+        path:'/',
+        httpOnly:true,
+        maxAge:24 * 60 * 60 * 1000 //ms
+    },
+    store: redisStore({
+        all:`${REDIS_CONF.host}:${REDIS_CONF.port}`
+    })
+}))
 
 // logger
 // app.use(async (ctx, next) => {
@@ -57,7 +57,7 @@ app.use(users.routes(), users.allowedMethods())
 
 // error-handling
 app.on('error', (err, ctx) => {
-  console.error('server error', err, ctx)
-});
+    console.error('server error', err, ctx)
+})
 
 module.exports = app
