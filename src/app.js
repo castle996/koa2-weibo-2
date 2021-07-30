@@ -9,6 +9,11 @@ const logger = require('koa-logger')
 const index = require('./routes/index')
 const users = require('./routes/users')
 
+const session = require('koa-generic-session')
+const redisStore = require('koa-redis')
+
+const { REDIS_CONF } = require('./conf/db')
+
 // error handler
 onerror(app)
 
@@ -23,6 +28,20 @@ app.use(require('koa-static')(__dirname + '/public'))
 app.use(views(__dirname + '/views', {
   extension: 'ejs'
 }))
+
+app.keys=['AFSDFSDFDFD'];
+app.use(session({
+  key:'weibo.sid',//cookie name 默认值 'koa.sid'
+  prefix:'weibo:sess:',//reids key 的前缀，默认值 'koa:sess:'
+  cookie:{
+    path:'/',
+    httpOnly:true,
+    maxAge:24 * 60 * 60 * 1000 //ms
+  },
+  store: redisStore({
+    all:`${REDIS_CONF.host}:${REDIS_CONF.port}`
+  })
+}));
 
 // logger
 // app.use(async (ctx, next) => {
