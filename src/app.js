@@ -8,7 +8,8 @@ const logger = require('koa-logger')
 
 const errorViewRouter=require('./routes/view/error')
 const index = require('./routes/index')
-const users = require('./routes/users')
+const userViewRouter = require('./routes/view/user')
+const userApiRouter = require('./routes/api/user')
 
 const session = require('koa-generic-session')
 const redisStore = require('koa-redis')
@@ -61,8 +62,8 @@ app.use(session({
 
 // routes
 app.use(index.routes(), index.allowedMethods())
-app.use(users.routes(), users.allowedMethods())
-
+app.use(userViewRouter.routes(), userViewRouter.allowedMethods())
+app.use(userApiRouter.routes(), userApiRouter.allowedMethods())
 //404路由在下面
 app.use(errorViewRouter.routes(), errorViewRouter.allowedMethods())
 
