@@ -4,7 +4,7 @@
  */
 
 const router = require('koa-router')()
-const {loginRedirect}=require('')
+const { loginRedirect } = require('../../middlewares/loginChecks')
 /**
  * 获取登录信息
  * @param {Object} ctx ctx
