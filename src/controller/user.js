@@ -3,7 +3,7 @@
  * @author Castle
  */
 
-const { getUserInfo,createUser,deleteUser,updateUser } = require('../services/user')
+const { getUserInfo,createUser,deleteUser,updateUser,updatePassword } = require('../services/user')
 const { ErrorModel, SuccessModel } = require('../model/ResModel')
 const { registerUserNameNotExistInfo,
     registerUserNameExistInfo,
@@ -45,6 +45,7 @@ async function register({userName,password,gender}) {
             password: doCrypto(password),
             gender
         })
+        console.log(doCrypto(password))
         return new SuccessModel()
     }catch(ex){
         console.error(ex.message,ex.stack)
@@ -115,10 +116,41 @@ async function changeInfo(ctx,{nickName,city,picture}){
 
     return new ErrorModel(changeInfoFailInfo)
 }
+/**
+ * 修改个人信息
+ * @param {string} userName 
+ * @param {string} password 
+ * @param {string} newPassword
+ */
+async function changePassword(userName, password, newPassword){
+    const result=await updatePassword(
+        {
+            newPassword:doCrypto(newPassword)
+        },
+        {
+            userName,
+            password:doCrypto(password)
+        }
+    )
+    if (result){
+        return new SuccessModel()
+    }
+    return new ErrorModel(changePasswordFailInfo)
+}
+/**
+ * 退出登录
+ * @param {Object} ctx ctx
+ */
+async function logout(ctx) {
+    delete ctx.session.userInfo
+    return new SuccessModel()
+}
 module.exports={
     isExist,
     register,
     login,
     deleteCurUser,
-    changeInfo
+    changeInfo,
+    changePassword,
+    logout
 }
