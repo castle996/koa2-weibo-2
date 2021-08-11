@@ -62,8 +62,39 @@ async function deleteUser(userName){
     //result 删除的行数
     return result>0
 }
+
+/**
+ * 
+ * @param {*} 修改内容
+ * @param {*} 查询条件
+ */
+async function updateUser({newPassword,newNickName,newPicture,newCity},{userName,password}){
+    const updateData={}
+    if (newPassword){
+        updateData.password=newPassword
+    }
+    if (newNickName){
+        updateData.nickName=newNickName
+    }
+    if (newPicture){
+        updateData.picture=newPicture
+    }
+    if (newCity){
+        updateData.city=newCity
+    }
+    const whereData={userName}
+    if (password){
+        whereData.password=password
+    }
+
+    const result=await User.update(updateData,{
+        where:whereData})
+    //
+    return result[0]>0
+}
 module.exports={
     getUserInfo,
     createUser,
-    deleteUser
+    deleteUser,
+    updateUser
 }
