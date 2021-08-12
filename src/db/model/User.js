@@ -1,5 +1,5 @@
 /**
- * @description 拥护数据模型
+ * @description 用户数据模型
  * @author Castle
  */
 
