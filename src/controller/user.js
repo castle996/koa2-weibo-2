@@ -45,7 +45,6 @@ async function register({userName,password,gender}) {
             password: doCrypto(password),
             gender
         })
-        console.log(doCrypto(password))
         return new SuccessModel()
     }catch(ex){
         console.error(ex.message,ex.stack)
