@@ -116,22 +116,21 @@ async function changeInfo(ctx,{nickName,city,picture}){
 
     return new ErrorModel(changeInfoFailInfo)
 }
+
 /**
- * 修改个人信息
- * @param {string} userName 
- * @param {string} password 
- * @param {string} newPassword
+ * 修改密码
+ * @param {string} userName 用户名
+ * @param {string} password 原密码
+ * @param {string} newPassword 新密码
  */
 async function changePassword(userName, password, newPassword){
-    const result=await updatePassword(
-        {
-            newPassword:doCrypto(newPassword)
-        },
-        {
-            userName,
-            password:doCrypto(password)
-        }
-    )
+    const result=await updatePassword({
+        newPassword: doCrypto(newPassword)
+    },{
+        userName,
+        password: doCrypto(password)
+    })
+
     if (result){
         return new SuccessModel()
     }
