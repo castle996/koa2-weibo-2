@@ -5,19 +5,20 @@
 
 const { createBlog } = require('../services/blog')
 const { ErrorModel, SuccessModel } = require('../model/ResModel')
+const xss=require('xss')
 const { createBlogFailInfo
 } = require('../model/Errorinfo')
  
 /**
   * 注册
-  * @param {*} param0 
+  * @param {Object} {userId,content,image} 
   * @returns 
   */
 async function create({userId,content,image}) {
     try {
         const blog= await createBlog({
             userId,
-            content,
+            content:xss(content),
             image
         })
         return new SuccessModel()

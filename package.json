@@ -34,7 +34,8 @@
     "pre-commit": "^1.2.2",
     "redis": "^3.1.2",
     "sequelize": "^6.6.5",
-    "supertest": "^6.1.4"
+    "supertest": "^6.1.4",
+    "xss": "^1.0.9"
   },
   "devDependencies": {
     "nodemon": "^1.19.4"
