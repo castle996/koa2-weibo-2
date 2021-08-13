@@ -12,7 +12,8 @@ const userViewRouter = require('./routes/view/user')
 const userApiRouter = require('./routes/api/user')
 const utilsApiRouter = require('./routes/api/utils')
 
-const blogHomeRouter = require('./routes/api//blog-home')
+const blogHomeRouter = require('./routes/api/blog-home')
+const profileAPIRouter = require('./routes/api/blog-profile')
 const blogViewRouter = require('./routes/view/blog')
 
 const session = require('koa-generic-session')
@@ -71,6 +72,7 @@ app.use(session({
 app.use(userViewRouter.routes(), userViewRouter.allowedMethods())
 app.use(blogViewRouter.routes(), blogViewRouter.allowedMethods())
 app.use(blogHomeRouter.routes(), blogHomeRouter.allowedMethods())
+app.use(profileAPIRouter.routes(), profileAPIRouter.allowedMethods())
 app.use(userApiRouter.routes(), userApiRouter.allowedMethods())
 app.use(utilsApiRouter.routes(), utilsApiRouter.allowedMethods())
 //404路由在下面
