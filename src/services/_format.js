@@ -4,6 +4,7 @@
  */
 
 const {DEFAULT_PICTURE}=require('../conf/constant')
+const { timeFormat } = require('../utils/dt')
 /**
  * 用户默认头像
  * @param {Object} obj 
@@ -13,6 +14,17 @@ function _formatUserPicture(obj){
     if(obj.picture==null){
         obj.picture=DEFAULT_PICTURE
     }
+    return obj
+}
+
+/**
+ * 格式化时间
+ * @param {Object} obj 
+ * @returns 
+ */
+function _formatDBTime(obj){
+    obj.createdAtFormat= timeFormat(obj.createdAt)
+    obj.updatedAtFormat= timeFormat(obj.updatedAt)
     return obj
 }
 
@@ -32,6 +44,23 @@ function formatUser(list){
     return _formatUserPicture(list)
 }
 
+/**
+ * 格式化Blog信息
+ * @param {Array|Object} list 
+ */
+function formatBlog(list){
+    if (list==null){
+        return list
+    }
+
+    if (list instanceof Array){
+        return list.map(_formatDBTime)
+    }
+
+    return _formatDBTime(list)
+}
+
 module.exports={
-    formatUser
+    formatUser,
+    formatBlog
 }
