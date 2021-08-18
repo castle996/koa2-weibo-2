@@ -23,8 +23,8 @@ async function getUsersByFollower(followerId){
         }]
     })
 
-    //result.count
-    //result.rows
+    // result.count 总数
+    // result.rows 查询结果，数组
     let userList=result.rows.map(row=>row.dataValues)
     userList = formatUser(userList)
 
@@ -56,26 +56,52 @@ async function getFollowersByUser(userId) {
             }
         }
     })
+
     // result.count 总数
     // result.rows 查询结果，数组
-
     let userList = result.rows.map(row => row.dataValues)
-
     userList = userList.map(item => {
         let user = item.user
         user = user.dataValues
         user = formatUser(user)
         return user
     })
-
     return {
         count: result.count,
         userList
     }
 }
 
+/**
+ * 添加关注关系
+ * @param {number} userId 用户 id
+ * @param {number} followerId 被关注用户 id
+ */
+async function addFollower(userId, followerId) {
+    const result = await UserRelation.create({
+        userId,
+        followerId
+    })
+    return result.dataValues
+}
 
+/**
+ * 删除关注关系
+ * @param {number} userId 用户 id
+ * @param {number} followerId 被关注用户 id
+ */
+async function deleteFollower(userId, followerId) {
+    const result = await UserRelation.destroy({
+        where: {
+            userId,
+            followerId
+        }
+    })
+    return result > 0
+}
 module.exports={
     getUsersByFollower,
-    getFollowersByUser
+    getFollowersByUser,
+    addFollower,
+    deleteFollower
 }
