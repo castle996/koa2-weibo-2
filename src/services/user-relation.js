@@ -19,7 +19,12 @@ async function getUsersByFollower(followerId){
         ],
         include:[{
             model:UserRelation,
-            where:{followerId}
+            where:{
+                followerId,
+                userId:{
+                    [Sequelize.Op.ne]:followerId
+                }         
+            }
         }]
     })
 
