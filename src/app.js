@@ -12,6 +12,7 @@ const userViewRouter = require('./routes/view/user')
 const userApiRouter = require('./routes/api/user')
 const utilsApiRouter = require('./routes/api/utils')
 
+const atAPIRouter = require('./routes/api/blog-at')
 const blogHomeRouter = require('./routes/api/blog-home')
 const profileAPIRouter = require('./routes/api/blog-profile')
 const squareAPIRouter = require('./routes/api/blog-square')
@@ -69,7 +70,7 @@ app.use(session({
 // })
 
 // routes
-
+app.use(atAPIRouter.routes(), atAPIRouter.allowedMethods())
 app.use(userViewRouter.routes(), userViewRouter.allowedMethods())
 app.use(blogViewRouter.routes(), blogViewRouter.allowedMethods())
 app.use(blogHomeRouter.routes(), blogHomeRouter.allowedMethods())
