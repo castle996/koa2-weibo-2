@@ -29,5 +29,6 @@ Blog.hasMany(AtRelation, {
 module.exports={
     User,
     Blog,
-    UserRelation
+    UserRelation,
+    AtRelation
 }
