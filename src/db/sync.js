@@ -3,7 +3,7 @@
  * @author Castle
  */
 
-const seq=require('./seq')
+const seq=require('./mssql')
 require('./model/index')
 
 seq.authenticate().then(()=>{

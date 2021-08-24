@@ -3,22 +3,22 @@
  * @author Castle
  */
 
-const seq=require('../seq')
+const seq=require('../mssql')
 const {INTEGER,STRING,TEXT}= require('../types')
 const Blog=seq.define('blog',{
     userId:{
         type:INTEGER,
         allowNull:false,
-        comment:'用户 ID'
+        comment:'userId'
     },
     content:{
         type:TEXT,
         allowNull:false,
-        comment:'内容'
+        comment:'content'
     },
     image:{
         type:STRING,
-        comment:'图片'
+        comment:'image'
     }
 })
  

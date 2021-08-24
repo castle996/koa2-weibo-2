@@ -3,18 +3,18 @@
  * @author Castle
  */
 
-const seq=require('../seq')
+const seq=require('../mssql')
 const {INTEGER,STRING,TEXT}= require('../types')
 const UserRelation=seq.define('userRelation',{
     userId:{
         type:INTEGER,
         allowNull:false,
-        comment:'用户 ID'
+        comment:'userId'
     },
     followerId:{
         type:INTEGER,
         allowNull:false,
-        comment:'被关注用户 ID'
+        comment:'followerId'
     }
 })
   
