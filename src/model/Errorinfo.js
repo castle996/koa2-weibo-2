@@ -73,5 +73,30 @@ module.exports={
     deleteBlogFailInfo: {
         errno: 11002,
         message: '删除微博失败，请重试'
+    },
+    createPartFailInfo: {
+        errno: 20001,
+        message: 'Failed to create part.'
+    },
+    updatePartFailInfo: {
+        errno: 20002,
+        message: 'Failed to update part.'
+    },
+    deletePartFailInfo: {
+        errno: 20003,
+        message: 'Failed to delete part.'
+    },
+    createPOFailInfo: {
+        errno: 20004,
+        message: 'Failed to create PO.'
+    },
+    updatePOFailInfo: {
+        errno: 20005,
+        message: 'Failed to update PO.'
+    },
+    deletePOFailInfo: {
+        errno: 20006,
+        message: 'Failed to delete PO.'
     }
+
 }

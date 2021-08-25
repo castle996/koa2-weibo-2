@@ -80,7 +80,47 @@ function formatBlog(list){
     return result
 }
 
+/**
+ * 
+ * @param {*} list 
+ * @returns 
+ */
+function formatPart(list){
+    if (list==null){
+        return list
+    }
+
+    if (list instanceof Array){
+        return list.map(_formatDBTime)
+    }
+
+    let result=list
+    result=_formatDBTime(result)
+    return result
+}
+
+/**
+ * 
+ * @param {*} list 
+ * @returns 
+ */
+function formatPO(list){
+    if (list==null){
+        return list
+    }
+
+    if (list instanceof Array){
+        return list.map(_formatDBTime)
+    }
+
+    let result=list
+    result=_formatDBTime(result)
+    return result
+}
+
 module.exports={
     formatUser,
-    formatBlog
+    formatBlog,
+    formatPart,
+    formatPO
 }

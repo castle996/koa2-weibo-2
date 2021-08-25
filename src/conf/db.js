@@ -18,13 +18,20 @@ MYSQL_CONF={
     database:'koa2_weibo_db'
 
 }
-MSSQL_CONF={
+OSE_CONF={
     host:'192.168.16.148',
     user:'sa',
     password:'Weifang@1520#',
     port:1433,
     database:'test_db'
 
+}
+MSSQL_CONF={
+    host:'costruct.app',
+    user:'Tasktag',
+    password:'Weifang@1520#',
+    port:2871,
+    database:'node_test'
 }
 if (isProd) {
     REDIS_CONF = {
@@ -42,7 +49,7 @@ if (isProd) {
         database: 'koa2_weibo_db'
     }
 
-    MSSQL_CONF={
+    OSE_CONF={
         host:'192.168.16.148',
         user:'sa',
         password:'Weifang@1520#',
@@ -50,10 +57,19 @@ if (isProd) {
         database:'test_db'
     
     }
+
+    MSSQL_CONF={
+        host:'costruct.app',
+        user:'Tasktag',
+        password:'Weifang@1520#',
+        port:2871,
+        database:'node_test'
+    }
     
 }
 module.exports={
     REDIS_CONF,
     MYSQL_CONF,
-    MSSQL_CONF
+    MSSQL_CONF,
+    OSE_CONF
 }

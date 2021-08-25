@@ -7,16 +7,27 @@ const bodyparser = require('koa-bodyparser')
 const logger = require('koa-logger')
 const path=require('path')
 
-const errorViewRouter=require('./routes/view/error')
-const userViewRouter = require('./routes/view/user')
-const userApiRouter = require('./routes/api/user')
-const utilsApiRouter = require('./routes/api/utils')
 
+const poViewRouter = require('./routes/view/po')
+const partViewRouter = require('./routes/view/part')
+
+const userViewRouter = require('./routes/view/user')
+const blogViewRouter = require('./routes/view/blog')
+
+
+
+
+const poAPIRouter = require('./routes/api/po')
+const partAPIRouter = require('./routes/api/part')
+
+const userAPIRouter = require('./routes/api/user')
+const utilsAPIRouter = require('./routes/api/utils')
 const atAPIRouter = require('./routes/api/blog-at')
-const blogHomeRouter = require('./routes/api/blog-home')
+const blogHomeAPIRouter = require('./routes/api/blog-home')
 const profileAPIRouter = require('./routes/api/blog-profile')
 const squareAPIRouter = require('./routes/api/blog-square')
-const blogViewRouter = require('./routes/view/blog')
+
+const errorViewRouter=require('./routes/view/error')
 
 const session = require('koa-generic-session')
 const redisStore = require('koa-redis')
@@ -70,14 +81,24 @@ app.use(session({
 // })
 
 // routes
-app.use(atAPIRouter.routes(), atAPIRouter.allowedMethods())
+app.use(poViewRouter.routes(), poViewRouter.allowedMethods())
+app.use(partViewRouter.routes(), partViewRouter.allowedMethods())
+
 app.use(userViewRouter.routes(), userViewRouter.allowedMethods())
 app.use(blogViewRouter.routes(), blogViewRouter.allowedMethods())
-app.use(blogHomeRouter.routes(), blogHomeRouter.allowedMethods())
+
+
+
+app.use(poAPIRouter.routes(), poAPIRouter.allowedMethods())
+app.use(partAPIRouter.routes(), partAPIRouter.allowedMethods())
+
+app.use(atAPIRouter.routes(), atAPIRouter.allowedMethods())
+app.use(blogHomeAPIRouter.routes(), blogHomeAPIRouter.allowedMethods())
 app.use(profileAPIRouter.routes(), profileAPIRouter.allowedMethods())
 app.use(squareAPIRouter.routes(), squareAPIRouter.allowedMethods())
-app.use(userApiRouter.routes(), userApiRouter.allowedMethods())
-app.use(utilsApiRouter.routes(), utilsApiRouter.allowedMethods())
+app.use(userAPIRouter.routes(), userAPIRouter.allowedMethods())
+app.use(utilsAPIRouter.routes(), utilsAPIRouter.allowedMethods())
+
 //404路由在下面
 app.use(errorViewRouter.routes(), errorViewRouter.allowedMethods())
 

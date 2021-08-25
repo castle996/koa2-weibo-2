@@ -36,6 +36,7 @@
     "pre-commit": "^1.2.2",
     "redis": "^3.1.2",
     "sequelize": "^6.6.5",
+    "sequelize-auto": "^0.8.4",
     "supertest": "^6.1.4",
     "tedious": "^12.0.0",
     "xss": "^1.0.9"
