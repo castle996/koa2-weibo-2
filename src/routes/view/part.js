@@ -4,18 +4,30 @@
  */
 
 const router = require('koa-router')()
-const { getSquareBlogList } = require('../../controller/blog-square')
+const { getAllPartList } = require('../../controller/part')
   
+// home page
+router.get('/', async (ctx, next) => {
+    const result= await getAllPartList(0)
+    
+    await ctx.render('parts/list', {
+        count:result.data.count,
+        partList:result.data.partList
+    })
+})
+router.get('/new', async (ctx, next) => {
+    await ctx.render('parts/new', {
+    })
+})
 // parts list
 router.get('/partlist', async (ctx, next) => {
-    // parts list
-    const result = await getSquareBlogList(0)
-    const { isEmpty, blogList, pageSize, pageIndex, count } = result.data || {}
+    const result = await getAllPartList(0)
+    const { isEmpty, partList, pageSize, pageIndex, count } = result.data || {}
  
-    await ctx.render('partlist', {
-        blogData: {
+    await ctx.render('parts/list', {
+        partData: {
             isEmpty,
-            blogList,
+            partList,
             pageSize,
             pageIndex,
             count

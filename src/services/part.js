@@ -3,7 +3,7 @@
  * @author Castle
  */
 
-const {parts_castle}=require('../db/model/init-models')
+const MODELS=require('../db/model/init-tables')
 const { formatPart } = require('./_format')
 
 /**
@@ -12,7 +12,10 @@ const { formatPart } = require('./_format')
  * @returns 
  */
 async function createPart({code,description,price}){
-    const result=await parts_castle.create({
+    console.log(code)
+    console.log(description)
+    console.log(price)
+    const result=await MODELS.parts_castle.create({
         code,
         description,
         price
@@ -37,7 +40,7 @@ async function updatePart({description,price},code){
 
     const whereData={code}
 
-    const result=await parts_castle.update(updateData,{
+    const result=await MODELS.parts_castle.update(updateData,{
         where:whereData})
     //
     return result[0]>0
@@ -49,7 +52,7 @@ async function updatePart({description,price},code){
  * @returns 
  */
 async function deletePart(code){
-    const result=await parts_castle.destroy({
+    const result=await MODELS.parts_castle.destroy({
         where:{code}
     })
     //result 删除的行数
@@ -63,7 +66,7 @@ async function deletePart(code){
   */
 async function getPartList({pageIndex=0,pageSize=2}){
     //执行查询
-    const result=await parts_castle.findAndCountAll({
+    const result=await MODELS.parts_castle.findAndCountAll({
         attributes:['code','description','price'],
         limit:pageSize,
         offset:pageSize * pageIndex,
@@ -74,7 +77,7 @@ async function getPartList({pageIndex=0,pageSize=2}){
     //result.count
     //result.rows
     let partList=result.rows.map(row=>row.dataValues)
-    partList = formatPart(partList)
+    //partList = formatPart(partList)
     
     return {
         count:result.count,

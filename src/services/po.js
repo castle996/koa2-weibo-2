@@ -3,7 +3,7 @@
  * @author Castle
  */
 
-const {parts_castle,po1_castle,po2_castle}=require('../db/model/init-models')
+const MODELS=require('../db/model/init-tables')
 const { formatPart,formatPO } = require('./_format')
  
 /**
@@ -12,15 +12,16 @@ const { formatPart,formatPO } = require('./_format')
   * @returns 
   */
 async function createPO({refdate,payto,shipto,subtotal,tax,total},po2list){
-    const result=await po1_castle.create({
+    const result=await MODELS.po1_castle.create({
         refdate,payto,shipto,subtotal,tax,total
     })
     const data=result.dataValues
     const idpo1=data.idnumber
-
-    await po2_castle.create(po2list.map(po2Item=>{
-        idpo1,po2Item.code,po2Item.quantity
-    }))
+    if (po2list != null){
+        await MODELS.po2_castle.create(po2list.map(po2Item=>{
+            idpo1,po2Item.code,po2Item.quantity
+        }))
+    }
     return data
 }
    
@@ -51,13 +52,13 @@ async function updatePO({refdate,payto,shipto,subtotal,tax,total},idpo1,po2list)
         updateData.total=total
     }
     const whereData={idnumber:idpo1}
-    const result=await po1_castle.update(updateData,{
+    const result=await MODELS.po1_castle.update(updateData,{
         where:whereData})
 
-    await po2_castle.destroy({
+    await MODELS.po2_castle.destroy({
         where:{idpo1}
     })
-    await po2_castle.create(po2list.map(po2Item=>{
+    await MODELS.po2_castle.create(po2list.map(po2Item=>{
         idpo1,po2Item.code,po2Item.quantity
     }))
     
@@ -70,10 +71,10 @@ async function updatePO({refdate,payto,shipto,subtotal,tax,total},idpo1,po2list)
   * @returns 
   */
 async function deletePO(idpo1){
-    await po2_castle.destroy({
+    await MODELS.po2_castle.destroy({
         where:{idpo1}
     })
-    const result=await po1_castle.destroy({
+    const result=await MODELS.po1_castle.destroy({
         where:{idnumber:idpo1}
     })
     //result 删除的行数
@@ -87,7 +88,7 @@ async function deletePO(idpo1){
    */
 async function getPO1List({pageIndex=0,pageSize=2}){
     //执行查询
-    const result=await po1_castle.findAndCountAll({
+    const result=await MODELS.po1_castle.findAndCountAll({
         attributes:['refdate','payto','shipto','subtotal','tax','total'],
         limit:pageSize,
         offset:pageSize * pageIndex,
@@ -98,7 +99,7 @@ async function getPO1List({pageIndex=0,pageSize=2}){
     //result.count
     //result.rows
     let po1List=result.rows.map(row=>row.dataValues)
-    po1List = formatPO(po1List)
+    //po1List = formatPO(po1List)
 
     return {
         count:result.count,
@@ -113,7 +114,7 @@ async function getPO1List({pageIndex=0,pageSize=2}){
    */
 async function getPO2List({idpo1,pageIndex=0,pageSize=2}){
     //执行查询
-    const result=await po2_castle.findAndCountAll({
+    const result=await MODELS.po2_castle.findAndCountAll({
         attributes:['item','quantity'],
         limit:pageSize,
         offset:pageSize * pageIndex,
@@ -131,7 +132,7 @@ async function getPO2List({idpo1,pageIndex=0,pageSize=2}){
     //result.count
     //result.rows
     let po2List=result.rows.map(row=>row.dataValues)
-    po2List = formatPO(po2List)
+    //po2List = formatPO(po2List)
     po2List=po2List.map(po2Item=>{
         const parts_castle=po2Item.parts_castle.dataValues
         po2Item.parts_castle=formatPart(parts_castle)

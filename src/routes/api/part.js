@@ -4,19 +4,31 @@
  */
 
 const router = require('koa-router')()
-const blogValidate = require('../../validator/blog')
+const partValidate = require('../../validator/part')
 const { genValidator } = require('../../middlewares/validator')
 const {
-    create
-} = require('../../controller/blog-home')
+    createPt,
+    updatePt,
+    deletePt
+} = require('../../controller/part')
   
 router.prefix('/api/part')
   
 //
-router.post('/create',genValidator(blogValidate), async (ctx, next)=> {
-    const { content, image } = ctx.request.body
-    const { id: userId } = ctx.session.userInfo
-    ctx.body = await create({ userId, content, image })
+router.post('/create',genValidator(partValidate), async (ctx, next)=> {
+    const {code,description,price} = ctx.request.body
+    ctx.body = await createPt({code,description,price})
 })
  
+//
+router.post('/update',genValidator(partValidate), async (ctx, next)=> {
+    const {code,description,price} = ctx.request.body
+    ctx.body = await updatePt({description,price},code)
+})
+
+//
+router.post('/delete', async (ctx, next)=> {
+    const {code} = ctx.request.body
+    ctx.body = await deletePt(code)
+})
 module.exports=router

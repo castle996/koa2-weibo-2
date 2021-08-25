@@ -13,48 +13,48 @@ const { getHomeBlogList } = require('../../controller/blog-home')
 const {getAtMeCount,getAtMeBlogList,markAsRead}=require('../../controller/blog-at')
  
 // 首页
-router.get('/', loginRedirect, async (ctx, next) => {
-    const userInfo = ctx.session.userInfo
-    const { id: userId } = userInfo
+// router.get('/', loginRedirect, async (ctx, next) => {
+//     const userInfo = ctx.session.userInfo
+//     const { id: userId } = userInfo
 
-    // 获取第一页数据
-    const result = await getHomeBlogList(userId)
-    const { isEmpty, blogList, pageSize, pageIndex, count } = result.data
+//     // 获取第一页数据
+//     const result = await getHomeBlogList(userId)
+//     const { isEmpty, blogList, pageSize, pageIndex, count } = result.data
 
-    // 获取粉丝
-    const fansResult = await getFans(userId)
-    const { count: fansCount, fansList } = fansResult.data
+//     // 获取粉丝
+//     const fansResult = await getFans(userId)
+//     const { count: fansCount, fansList } = fansResult.data
 
-    // 获取关注人列表
-    const followersResult = await getFollowers(userId)
-    const { count: followersCount, followersList } = followersResult.data
+//     // 获取关注人列表
+//     const followersResult = await getFollowers(userId)
+//     const { count: followersCount, followersList } = followersResult.data
 
-    // 获取 @ 数量
-    const atCountResult = await getAtMeCount(userId)
-    const { count: atCount } = atCountResult.data
+//     // 获取 @ 数量
+//     const atCountResult = await getAtMeCount(userId)
+//     const { count: atCount } = atCountResult.data
 
-    await ctx.render('index', {
-        userData: {
-            userInfo,
-            fansData: {
-                count: fansCount,
-                list: fansList
-            },
-            followersData: {
-                count: followersCount,
-                list: followersList
-            },
-            atCount
-        },
-        blogData: {
-            isEmpty,
-            blogList,
-            pageSize,
-            pageIndex,
-            count
-        }
-    })
-})
+//     await ctx.render('index', {
+//         userData: {
+//             userInfo,
+//             fansData: {
+//                 count: fansCount,
+//                 list: fansList
+//             },
+//             followersData: {
+//                 count: followersCount,
+//                 list: followersList
+//             },
+//             atCount
+//         },
+//         blogData: {
+//             isEmpty,
+//             blogList,
+//             pageSize,
+//             pageIndex,
+//             count
+//         }
+//     })
+// })
  
 // 个人主页
 router.get('/profile/', loginRedirect, async (ctx, next) => {

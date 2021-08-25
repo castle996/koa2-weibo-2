@@ -4,29 +4,38 @@
  */
 
 const router = require('koa-router')()
-const { getSquareBlogList } = require('../../controller/blog-square')
+const { getAllPO1List,getAllPO2List } = require('../../controller/po')
    
 // home page
-router.get('/', async (ctx, next) => {
-   
-})
+// router.get('/', async (ctx, next) => {
+//     const result = await getAllPO1List(0)
+//     const { isEmpty, po1List, pageSize, pageIndex, count } = result.data || {}
   
-// parts list
-router.get('/polist', async (ctx, next) => {
-    // parts list
-    const result = await getSquareBlogList(0)
-    const { isEmpty, blogList, pageSize, pageIndex, count } = result.data || {}
+//     await ctx.render('po1list', {
+//         po1Data: {
+//             isEmpty,
+//             po1List,
+//             pageSize,
+//             pageIndex,
+//             count
+//         }
+//     })
+// })
   
-    await ctx.render('polist', {
-        blogData: {
-            isEmpty,
-            blogList,
-            pageSize,
-            pageIndex,
-            count
-        }
-    })
-})
+// po2 list
+// router.get('/po2list', async (ctx, next) => {
+//     const result = await getAllPO2List(0)
+//     const { isEmpty, po2List, pageSize, pageIndex, count } = result.data || {}
   
+//     await ctx.render('po2list', {
+//         po2Data: {
+//             isEmpty,
+//             po2List,
+//             pageSize,
+//             pageIndex,
+//             count
+//         }
+//     })
+// })
 module.exports = router
    

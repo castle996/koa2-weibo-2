@@ -1,11 +1,11 @@
 const Sequelize = require('sequelize')
 
 const {MSSQL_CONF}=require('../conf/db')
-const {host,user,password,database}=MSSQL_CONF
+const {host,user,password,database,port}=MSSQL_CONF
 
 const seq = new Sequelize(database, user, password, {
     host: host,
-    port: 1433,
+    port: port,
     dialect: 'mssql',
     pool: {
         max: 5,

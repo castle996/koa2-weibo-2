@@ -1,0 +1,28 @@
+<%- include('../layout/header', { title: 'create new parts' })%>
+    <div class="container">
+<a href="/new">New</a>
+    <table class="table table-striped table-hover">
+        <th>
+        <td>Code</td>
+        <td>Description</td>
+        <td>Price</td>
+        </th>
+
+
+        <% partList.forEach(parts=> { %>
+            <tr>
+                <td></td>
+                <td>
+                    <%= parts.code%>
+                </td>
+                <td>
+                    <%= parts.description%>
+                </td>
+                <td>
+                    <%= parts.price%>
+                </td>
+            </tr>
+            <% }) %>
+    </table>
+</div>
+    <%- include('../layout/footer')%>
