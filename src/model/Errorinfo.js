@@ -97,6 +97,10 @@ module.exports={
     deletePOFailInfo: {
         errno: 20006,
         message: 'Failed to delete PO.'
+    },
+    partNotFoundInfo: {
+        errno: 20007,
+        message: 'Part not found.'
     }
 
 }

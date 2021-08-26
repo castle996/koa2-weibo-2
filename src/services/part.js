@@ -64,7 +64,7 @@ async function deletePart(code){
   * @param {*} param0 
   * @returns 
   */
-async function getPartList({pageIndex=0,pageSize=2}){
+async function getPartList({pageIndex=0,pageSize=10}){
     //执行查询
     const result=await MODELS.parts_castle.findAndCountAll({
         attributes:['code','description','price'],
@@ -84,10 +84,25 @@ async function getPartList({pageIndex=0,pageSize=2}){
         partList
     }
 }
- 
+async function getPartInfo(code){
+    const whereOpt={
+        code
+    }
+    const result=await MODELS.parts_castle.findOne({
+        attributes:['code','description','price'],
+        where:whereOpt
+    })
+
+    if (result==null){
+        return result
+    }
+
+    return result.dataValues
+}
 module.exports={
     createPart,
     updatePart,
     deletePart,
-    getPartList
+    getPartList,
+    getPartInfo
 }

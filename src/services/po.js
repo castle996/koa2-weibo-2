@@ -18,9 +18,9 @@ async function createPO({refdate,payto,shipto,subtotal,tax,total},po2list){
     const data=result.dataValues
     const idpo1=data.idnumber
     if (po2list != null){
-        await MODELS.po2_castle.create(po2list.map(po2Item=>{
-            idpo1,po2Item.code,po2Item.quantity
-        }))
+        po2list.map(async po2Item=>await MODELS.po2_castle.create(
+            {idpo1,code:po2Item.code,quantity:po2Item.quantity}
+        ))
     }
     return data
 }
@@ -58,9 +58,11 @@ async function updatePO({refdate,payto,shipto,subtotal,tax,total},idpo1,po2list)
     await MODELS.po2_castle.destroy({
         where:{idpo1}
     })
-    await MODELS.po2_castle.create(po2list.map(po2Item=>{
-        idpo1,po2Item.code,po2Item.quantity
-    }))
+    if (po2list != null){
+        po2list.map(async po2Item=>await MODELS.po2_castle.create(
+            {idpo1,code:po2Item.code,quantity:po2Item.quantity}
+        ))
+    }
     
     return result[0]>0
 }
@@ -86,10 +88,10 @@ async function deletePO(idpo1){
    * @param {*} param0 
    * @returns 
    */
-async function getPO1List({pageIndex=0,pageSize=2}){
+async function getPO1List({pageIndex=0,pageSize=10}){
     //执行查询
     const result=await MODELS.po1_castle.findAndCountAll({
-        attributes:['refdate','payto','shipto','subtotal','tax','total'],
+        attributes:['idnumber','refdate','payto','shipto','subtotal','tax','total'],
         limit:pageSize,
         offset:pageSize * pageIndex,
         order:[
@@ -99,7 +101,7 @@ async function getPO1List({pageIndex=0,pageSize=2}){
     //result.count
     //result.rows
     let po1List=result.rows.map(row=>row.dataValues)
-    //po1List = formatPO(po1List)
+    po1List = formatPO(po1List)
 
     return {
         count:result.count,
@@ -112,7 +114,7 @@ async function getPO1List({pageIndex=0,pageSize=2}){
    * @param {*} param0 
    * @returns 
    */
-async function getPO2List({idpo1,pageIndex=0,pageSize=2}){
+async function getPO2List({idpo1,pageIndex=0,pageSize=10}){
     //执行查询
     const result=await MODELS.po2_castle.findAndCountAll({
         attributes:['item','quantity'],
@@ -135,7 +137,7 @@ async function getPO2List({idpo1,pageIndex=0,pageSize=2}){
     //po2List = formatPO(po2List)
     po2List=po2List.map(po2Item=>{
         const parts_castle=po2Item.parts_castle.dataValues
-        po2Item.parts_castle=formatPart(parts_castle)
+        //po2Item.parts_castle=formatPart(parts_castle)
         return po2Item
     })
     return {

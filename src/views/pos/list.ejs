@@ -1,0 +1,43 @@
+<%- include('../layout/header', { title: 'create new parts' })%>
+    <div class="container">
+<a href="/newpo">New</a>
+    <table class="table table-striped table-hover">
+        <th>
+        <td>PO ID</td>
+        <td>Ref Date</td>
+        <td>Pay To</td>
+        <td>Ship To</td>
+        <td>SubTotal</td>
+        <td>Tax 8.25%</td>
+        <td>Total</td>
+        </th>
+        
+        <% po1List.forEach(po1=> { %>
+            <tr>
+                <td></td>
+                <td>
+                    <%= po1.idnumber%>
+                </td>
+                <td>
+                    <%= po1.refdate%>
+                </td>
+                <td>
+                    <%= po1.payto%>
+                </td>
+                <td>
+                    <%= po1.shipto%>
+                </td>
+                <td>
+                    <%= po1.subtotal%>
+                </td>
+                <td>
+                    <%= po1.tax%>
+                </td>
+                <td>
+                    <%= po1.total%>
+                </td>
+            </tr>
+            <% }) %>
+    </table>
+</div>
+    <%- include('../layout/footer')%>

@@ -23,8 +23,9 @@ function _formatUserPicture(obj){
  * @returns 
  */
 function _formatDBTime(obj){
-    obj.createdAtFormat= timeFormat(obj.createdAt)
-    obj.updatedAtFormat= timeFormat(obj.updatedAt)
+    obj.refdate= timeFormat(obj.refdate)
+    // obj.createdAtFormat= timeFormat(obj.createdAt)
+    // obj.updatedAtFormat= timeFormat(obj.updatedAt)
     return obj
 }
 

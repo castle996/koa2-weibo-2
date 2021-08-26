@@ -8,7 +8,7 @@ module.exports = function(sequelize, DataTypes) {
             primaryKey: true
         },
         refdate: {
-            type: DataTypes.DATE,
+            type: DataTypes.STRING(31),
             allowNull: false
         },
         payto: {

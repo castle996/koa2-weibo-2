@@ -10,7 +10,8 @@ const {format}=require('date-fns')
  * @returns 
  */
 function timeFormat(str){
-    return format(new Date(str),'MM.dd HH:mm')
+    return format(new Date(str),'MM/dd/YYY')
+    // return format(new Date(str),'MM.dd HH:mm')
 }
 
 module.exports={

@@ -1,0 +1,202 @@
+<%- include('../layout/header', { title: 'Create New PO' })%>
+
+    <div class="col-md-6 offset-md-3">
+        <div class="alert alert-primary" role="alert">
+            New PO
+        </div>
+        <div class="form-group row">
+            <label for="inputEmail3" class="col-sm-3 col-form-label">Ref. Date</label>
+            <div class="col-sm-9">
+                <input type="text" class="form-control" id="txtRefDate" />
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                <div class="form-group">
+                    <label for="inputPassword3" class="col-form-label">Pay To</label>
+                    <div>
+                        <textarea class="form-control" rows="3" id="txtPayTo"></textarea>
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="form-group">
+                    <label for="inputPassword3" class="col-form-label">Ship To</label>
+                    <div>
+                        <textarea class="form-control" rows="3" id="txtShipTo"></textarea>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-1">Code</div>
+            <div class="col-sm-4">Description</div>
+            <div class="col-sm-2">Price</div>
+            <div class="col-sm-2">Quantity</div>
+            <div class="col-sm-2">Amount</div>
+            <div class="col-sm-1"><i class="bi bi-plus-circle-fill" id="btnAddPart"></i></div>
+            
+            <!-- <div class="col-sm-12">
+                <table class="table table-striped table-hover">
+                    <th>
+                    <td class="col-sm-1">Code</td>
+                    <td class="col-sm-4">Description</td>
+                    <td class="col-sm-2">Price</td>
+                    <td class="col-sm-2">Quantity</td>
+                    <td class="col-sm-2">Amount</td>
+                    <td class="col-sm-1"><i class="bi bi-plus-circle-fill" id="btnAddPart" onclick="fnAddPart()"></i></td>
+                    </th>
+                </table>
+            </div> -->
+        </div>
+        <div id="tblListPart">
+        </div>
+        <div class="col-6 offset-6">
+            <div class="row">
+                <div class="col-6 text-right">
+                    <label for="txtSubTotal" class="col-form-label">Sub Total</label>
+                </div>                
+                <div class="col-6">
+                    <input type="text" readonly class="form-control text-right" id="txtSubTotal" value="2.3" />
+                </div>
+            </div>                
+        </div>
+        <div class="col-6 offset-6">
+            <div class="row">
+                <div class="col-6 text-right">
+                    <label for="txtTax" class="col-form-label">Tax 8.25%</label>
+                </div>                
+                <div class="col-6">
+                    <input type="text" readonly class="form-control text-right" id="txtTax" value="0.23"  />
+                </div>
+            </div>
+        </div>
+        <div class="col-6 offset-6">
+            <div class="row">
+                <div class="col-6 text-right">
+                    <label for="txtTotal" class="col-form-label">Total</label>
+                </div>                
+                <div class="col-6">
+                    <input type="text" readonly class="form-control text-right" id="txtTotal" value="2.53"  />
+                </div>
+            </div>
+        </div>
+        
+        <div class="form-group row">
+            <div class="col-sm-12">
+                <button type="button" id="btnSubmit" class="btn-primary btn-block">Submit</button>
+            </div>
+        </div>
+    </div>
+    <script>
+        $(function(){
+            var $tblListPart = $('#tblListPart')
+            var $txtSubTotal = $('#txtSubTotal')
+            var $txtTax = $('#txtTax')
+            var $txtTotal = $('#txtTotal')
+            var userNameTimeoutId
+            $('#btnAddPart').click(fnAddPart)
+            $('#btnSubmit').click(savePOs)
+            $('#txtRefDate').datepicker({
+                format: 'mm/dd/yyyy'
+            });
+            function fnAddPart() {
+                var $tr = $('<div class="partItem row form-group">' +
+                    '<div class="col-1"><input type="text" class="subCode" style="width: 40px;" /></div>' +
+                    '<div class="col-4 subDescription"></div>' +
+                    '<div class="col-2 subPrice"></div>' +
+                    '<div class="col-2"><input type="text" class="subQuantity" style="width: 60px;" /></div>' +
+                    '<div class="col-2 subAmount"></div>' +
+                    '<div class="col-1"><i class="bi bi-dash-circle-fill primary removeBtn"></i></div>'
+                    + '</div>');
+
+                $tblListPart.append($tr)
+
+                $tr.find('.removeBtn').on('click', function(){
+                    $tr.remove()    
+                })
+
+                $tr.find('.subCode').on('input',getPartByCode)
+                $tr.find('.subQuantity').on('input',calculateTotal)
+            }
+
+            function getPartByCode(){
+                if (userNameTimeoutId) {
+                    clearTimeout(userNameTimeoutId)
+                }
+                var codeElem =$(this)
+                
+                userNameTimeoutId = setTimeout(function(){
+                    $.ajax({
+                    type: 'GET',
+                    url: '/api/part/get/'+codeElem.val(),
+                    success: function (res) {
+                        var $tr=codeElem.parent().parent()
+                        var result = res.data
+                        
+                        $tr.find('.subDescription').html(result.description)
+                            $tr.find('.subPrice').html(result.price)
+                            $tr.find('.subQuantity').val('')
+                            $tr.find('.subAmount').html('')
+                    }
+                })}, 500)
+            }
+
+            function calculateTotal() {
+                var subTotal=0,tax=0,total=0
+                $tblListPart.children('.partItem').each((idx,obj) => {
+                    var $tr=$(obj)
+
+                    var subPice = parseFloat($tr.find('.subPrice').html())
+                    var subQuantity = parseFloat($tr.find('.subQuantity').val())
+                    var subAmount = subPice*subQuantity
+                    subTotal=subTotal+subAmount
+
+                    $tr.find('.subAmount').html(subAmount)
+                })
+
+                tax=subTotal*0.0825
+                total=subTotal+tax
+
+                $txtSubTotal.val(subTotal)
+                $txtTax.val(tax)
+                $txtTotal.val(total)
+            }
+
+            function savePOs() {
+                var po2list=[]
+                $tblListPart.children('.partItem').each((idx,obj) => {
+                    var $tr=$(obj)
+
+                    var partCode = $tr.find('.subCode').val()
+                    var subQuantity = parseFloat($tr.find('.subQuantity').val())
+                    
+                    po2list.push({code:partCode,quantity:subQuantity})
+                })
+
+                console.log(po2list)
+
+                var data = {
+                    refdate: $("#txtRefDate").val(),
+                    payto: $("#txtPayTo").val(),
+                    shipto: $("#txtShipTo").val(),
+                    subtotal: $("#txtSubTotal").val(),
+                    tax: $("#txtTax").val(),
+                    total: $("#txtTotal").val(),
+                    po2list
+                }
+
+                $.ajax({
+                    type: 'POST',
+                    url: '/api/po/create',
+                    data: data,
+                    success: function (res) {
+                        console.log(res);
+                    }
+                });
+            }
+        })
+        
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js" integrity="sha512-T/tUfKSV1bihCnd+MxKD0Hm1uBBroVYBOYSk1knyvQ9VyZJpc/ALb4P0r6ubwVPSGB2GvjeoMAJJImBG12TiaQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <%- include('../layout/footer')%>

@@ -6,13 +6,15 @@
 const {     createPart,
     updatePart,
     deletePart,
-    getPartList } = require('../services/part')
+    getPartList,
+    getPartInfo } = require('../services/part')
 const { ErrorModel, SuccessModel } = require('../model/ResModel')
 const { PAGE_SIZE} = require('../conf/constant')
 const xss=require('xss')
 const { createPartFailInfo,
     updatePartFailInfo,
-    deletePartFailInfo
+    deletePartFailInfo,
+    partNotFoundInfo
 } = require('../model/Errorinfo')
   
 /**
@@ -86,10 +88,18 @@ async function getAllPartList(pageIndex = 0) {
         count
     })
 }
- 
+async function getOnePart(code) {
+    const partInfo=await getPartInfo(code)
+    if (partInfo){
+        return new SuccessModel(partInfo)
+    } else {
+        return new ErrorModel(partNotFoundInfo)
+    }
+}
 module.exports={
     createPt,
     updatePt,
     deletePt,
-    getAllPartList
+    getAllPartList,
+    getOnePart
 }

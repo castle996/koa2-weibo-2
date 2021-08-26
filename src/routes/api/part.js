@@ -9,11 +9,16 @@ const { genValidator } = require('../../middlewares/validator')
 const {
     createPt,
     updatePt,
-    deletePt
+    deletePt,
+    getOnePart
 } = require('../../controller/part')
   
 router.prefix('/api/part')
   
+router.get('/get/:code', async (ctx, next) => {
+    const {code} = ctx.params
+    ctx.body = await getOnePart(code)
+})
 //
 router.post('/create',genValidator(partValidate), async (ctx, next)=> {
     const {code,description,price} = ctx.request.body
