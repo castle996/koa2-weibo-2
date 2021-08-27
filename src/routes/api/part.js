@@ -28,7 +28,7 @@ router.post('/create',genValidator(partValidate), async (ctx, next)=> {
 //
 router.post('/update',genValidator(partValidate), async (ctx, next)=> {
     const {code,description,price} = ctx.request.body
-    ctx.body = await updatePt({description,price},code)
+    ctx.body = await updatePt({description,price,code})
 })
 
 //

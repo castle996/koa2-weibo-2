@@ -41,11 +41,12 @@ async function createPt({code,description,price}) {
  * @param {*} code 
  * @returns 
  */
-async function updatePt({description,price},code){
+async function updatePt({description,price,code}){
     const result=await updatePart({
-        description:xss(description)
-        ,price}
-    ,code)
+        description:xss(description),
+        price,
+        code
+    })
 
     if (result){
         return new SuccessModel()

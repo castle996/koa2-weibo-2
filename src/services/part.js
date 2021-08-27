@@ -29,7 +29,7 @@ async function createPart({code,description,price}){
  * @param {*} param1 
  * @returns 
  */
-async function updatePart({description,price},code){
+async function updatePart({description,price,code}){
     const updateData={}
     if (description){
         updateData.description=description

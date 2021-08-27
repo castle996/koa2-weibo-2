@@ -4,14 +4,14 @@
  */
 
 const MODELS=require('../db/model/init-tables')
-const { formatPart,formatPO } = require('./_format')
+const { formatPO } = require('./_format')
  
 /**
   * create part
   * @param {*} param0 
   * @returns 
   */
-async function createPO({refdate,payto,shipto,subtotal,tax,total},po2list){
+async function createPO({refdate,payto,shipto,subtotal,tax,total,po2list}){
     const result=await MODELS.po1_castle.create({
         refdate,payto,shipto,subtotal,tax,total
     })
@@ -31,7 +31,7 @@ async function createPO({refdate,payto,shipto,subtotal,tax,total},po2list){
   * @param {*} param1 
   * @returns 
   */
-async function updatePO({refdate,payto,shipto,subtotal,tax,total},idpo1,po2list){
+async function updatePO({refdate,payto,shipto,subtotal,tax,total,idpo1,po2list}){
     const updateData={}
     if (refdate){
         updateData.refdate=refdate
@@ -124,8 +124,8 @@ async function getPO2List({idpo1,pageIndex=0,pageSize=10}){
             ['item','asc']
         ],
         include:[{
-            model:parts_castle,
-            attributes:['code','description','price']
+            model:MODELS.po1_castle,as:'idpo1_po1_castle',
+            attributes:['idnumber','payto','shipto']
         }],
         where :{
             idpo1
@@ -134,21 +134,38 @@ async function getPO2List({idpo1,pageIndex=0,pageSize=10}){
     //result.count
     //result.rows
     let po2List=result.rows.map(row=>row.dataValues)
-    //po2List = formatPO(po2List)
-    po2List=po2List.map(po2Item=>{
-        const parts_castle=po2Item.parts_castle.dataValues
-        //po2Item.parts_castle=formatPart(parts_castle)
-        return po2Item
-    })
     return {
         count:result.count,
         po2List
     }
+}
+async function getPOInfo(idpo1){
+    const result=await MODELS.po1_castle.findOne({
+        attributes:['idnumber','refdate','payto','shipto','subtotal','tax','total'],
+        include:[{
+            model:MODELS.po2_castle,as: 'po2_castles',
+            attributes:['item','quantity'],
+            include:[{
+                model:MODELS.parts_castle,as:'code_parts_castle',
+                attributes:['code','description','price']
+            }],
+        }],
+        where:{
+            idnumber:idpo1
+        }
+    })
+
+    if (result==null){
+        return result
+    }
+
+    return result.dataValues
 }
 module.exports={
     createPO,
     updatePO,
     deletePO,
     getPO1List,
-    getPO2List
+    getPO2List,
+    getPOInfo
 }

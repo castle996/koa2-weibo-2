@@ -7,13 +7,16 @@ const {   createPO,
     updatePO,
     deletePO,
     getPO1List,
-    getPO2List } = require('../services/po')
+    getPO2List,
+    getPOInfo
+} = require('../services/po')
 const { ErrorModel, SuccessModel } = require('../model/ResModel')
 const { PAGE_SIZE} = require('../conf/constant')
 const xss=require('xss')
 const { createPOFailInfo,
     updatePOFailInfo,
-    deletePOFailInfo
+    deletePOFailInfo,
+    poNotFoundInfo
 } = require('../model/Errorinfo')
   
 /**
@@ -22,7 +25,7 @@ const { createPOFailInfo,
  * @param {*} po2list 
  * @returns 
  */
-async function createPOr({refdate,payto,shipto,subtotal,tax,total},po2list) {
+async function createPOr({refdate,payto,shipto,subtotal,tax,total,po2list}) {
     try {
         const po1_castle= await createPO({
             refdate,
@@ -30,8 +33,9 @@ async function createPOr({refdate,payto,shipto,subtotal,tax,total},po2list) {
             shipto:xss(shipto),
             subtotal,
             tax,
-            total},
-        po2list)
+            total,
+            po2list
+        })
         return new SuccessModel(po1_castle)
     }catch(ex){
         console.error(ex.message, ex.stack)
@@ -45,16 +49,17 @@ async function createPOr({refdate,payto,shipto,subtotal,tax,total},po2list) {
  * @param {*} po2list 
  * @returns 
  */
-async function updatePOr({refdate,payto,shipto,subtotal,tax,total},idpo1,po2list){
+async function updatePOr({refdate,payto,shipto,subtotal,tax,total,idpo1,po2list}){
     const result=await updatePO({
         refdate,
         payto:xss(payto),
         shipto:xss(shipto),
         subtotal,
         tax,
-        total},
-    idpo1,
-    po2list)
+        total,
+        idpo1,
+        po2list
+    })
 
     if (result){
         return new SuccessModel()
@@ -100,8 +105,8 @@ async function getAllPO1List(pageIndex = 0) {
 
 async function getAllPO2List(idpo1,pageIndex = 0) {
     const result = await getPO2List(
-        idpo1,
         {
+            idpo1,
             pageIndex,
             pageSize: PAGE_SIZE
         }
@@ -117,10 +122,19 @@ async function getAllPO2List(idpo1,pageIndex = 0) {
         count
     })
 }
+async function getOnePO(idpo1) {
+    const poInfo=await getPOInfo(idpo1)
+    if (poInfo){
+        return new SuccessModel(poInfo)
+    } else {
+        return new ErrorModel(poNotFoundInfo)
+    }
+}
 module.exports={
     createPOr,
     updatePOr,
     deletePOr,
     getAllPO1List,
-    getAllPO2List
+    getAllPO2List,
+    getOnePO
 }

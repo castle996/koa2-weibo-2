@@ -101,6 +101,10 @@ module.exports={
     partNotFoundInfo: {
         errno: 20007,
         message: 'Part not found.'
+    },
+    poNotFoundInfo: {
+        errno: 20008,
+        message: 'PO not found.'
     }
 
 }

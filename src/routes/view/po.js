@@ -19,19 +19,9 @@ router.get('/newpo', async (ctx, next) => {
     })
 })
 //po2 list
-router.get('/po2list', async (ctx, next) => {
-    const result = await getAllPO2List(0)
-    const { isEmpty, po2List, pageSize, pageIndex, count } = result.data || {}
-  
-    await ctx.render('po2list', {
-        po2Data: {
-            isEmpty,
-            po2List,
-            pageSize,
-            pageIndex,
-            count
-        }
-    })
+router.get('/po2list/:idpo1', async (ctx, next) => {
+    const {idpo1} = ctx.params
+    ctx.body = await getAllPO2List(idpo1)
 })
 module.exports = router
    
