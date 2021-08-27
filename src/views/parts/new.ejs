@@ -43,11 +43,14 @@
 
 
             $.ajax({
+                    contentType: 'application/json',
                     type: 'POST',
                     url: '/api/part/create',
-                    data:data,
-                    success: function (data) {
-                        console.log(data);
+                    data: JSON.stringify(data),
+                    success: function (res) {
+                        if(res.errno==0){
+                        window.location.href='/partlist'
+                    }
                     }
                 });
         }

@@ -4,10 +4,17 @@
  */
 
 const router = require('koa-router')()
-const { getAllPartList } = require('../../controller/part')
+const { getAllPartList,getOnePart } = require('../../controller/part')
   
 router.get('/newpart', async (ctx, next) => {
     await ctx.render('parts/new', {
+    })
+})
+router.get('/detailpart/:code', async (ctx, next) => {
+    const {code} = ctx.params
+    const result = await getOnePart(code)
+    await ctx.render('parts/detail', {
+        part:result.data
     })
 })
 // parts list

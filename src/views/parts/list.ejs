@@ -10,7 +10,7 @@
 
 
         <% partList.forEach(parts=> { %>
-            <tr>
+            <tr class="listItem" style="cursor:pointer;" item='<%= parts.code %>'>
                 <td></td>
                 <td>
                     <%= parts.code%>
@@ -25,4 +25,12 @@
             <% }) %>
     </table>
 </div>
+<script type="text/javascript">
+    $(function () {
+        $('.listItem').click(function () {
+            var code = $(this).attr('item')
+            window.location.href = '/detailpart/' + code
+        })
+    })
+</script>
     <%- include('../layout/footer')%>

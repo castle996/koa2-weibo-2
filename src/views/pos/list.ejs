@@ -13,7 +13,7 @@
         </th>
         
         <% po1List.forEach(po1=> { %>
-            <tr>
+            <tr class="listItem" style="cursor:pointer;" item='<%= po1.idnumber %>'>
                 <td></td>
                 <td>
                     <%= po1.idnumber%>
@@ -40,4 +40,12 @@
             <% }) %>
     </table>
 </div>
+<script type="text/javascript">
+    $(function () {
+        $('.listItem').click(function () {
+            var idpo1 = $(this).attr('item')
+            window.location.href = '/detailpo/' + idpo1
+        })
+    })
+</script>
     <%- include('../layout/footer')%>

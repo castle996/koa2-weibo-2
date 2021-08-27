@@ -158,9 +158,9 @@
                 tax=subTotal*0.0825
                 total=subTotal+tax
 
-                $txtSubTotal.val(subTotal)
-                $txtTax.val(tax)
-                $txtTotal.val(total)
+                $txtSubTotal.val(subTotal.toFixed(2))
+                $txtTax.val(tax.toFixed(2))
+                $txtTotal.val(total.toFixed(2))
             }
 
             function savePOs() {
@@ -180,18 +180,20 @@
                     refdate: $("#txtRefDate").val(),
                     payto: $("#txtPayTo").val(),
                     shipto: $("#txtShipTo").val(),
-                    subtotal: $("#txtSubTotal").val(),
-                    tax: $("#txtTax").val(),
-                    total: $("#txtTotal").val(),
+                    subtotal: parseFloat($("#txtSubTotal").val()),
+                    tax:  parseFloat($("#txtTax").val()),
+                    total: parseFloat($("#txtTotal").val()),
                     po2list
                 }
-
                 $.ajax({
+                    contentType: 'application/json',
                     type: 'POST',
                     url: '/api/po/create',
-                    data: data,
+                    data: JSON.stringify(data),
                     success: function (res) {
-                        console.log(res);
+                        if(res.errno==0){
+                        window.location.href='/'
+                    }
                     }
                 });
             }

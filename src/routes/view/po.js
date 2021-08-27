@@ -4,7 +4,7 @@
  */
 
 const router = require('koa-router')()
-const { getAllPO1List,getAllPO2List } = require('../../controller/po')
+const { getAllPO1List,getAllPO2List,getOnePO } = require('../../controller/po')
    
 //home page
 router.get('/', async (ctx, next) => {
@@ -16,6 +16,14 @@ router.get('/', async (ctx, next) => {
 })
 router.get('/newpo', async (ctx, next) => {
     await ctx.render('pos/new', {
+    })
+})
+router.get('/detailpo/:idpo1', async (ctx, next) => {
+    const {idpo1} = ctx.params
+    const result = await getOnePO(idpo1)
+    console.log(result)
+    await ctx.render('pos/detail', {
+        po:result.data
     })
 })
 //po2 list

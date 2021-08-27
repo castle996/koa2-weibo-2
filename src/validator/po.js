@@ -16,6 +16,18 @@ const SCHEMA = {
         shipto: {
             type: 'string',
             maxLength: 255
+        },
+        subtotal: {
+            type: 'number',
+            minimum: 0
+        },
+        tax: {
+            type: 'number',
+            minimum: 0
+        },
+        total: {
+            type: 'number',
+            minimum: 0
         }
     }
 }

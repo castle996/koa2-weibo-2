@@ -144,10 +144,10 @@ async function getPOInfo(idpo1){
         attributes:['idnumber','refdate','payto','shipto','subtotal','tax','total'],
         include:[{
             model:MODELS.po2_castle,as: 'po2_castles',
-            attributes:['item','quantity'],
+            attributes:['item','code','quantity'],
             include:[{
                 model:MODELS.parts_castle,as:'code_parts_castle',
-                attributes:['code','description','price']
+                attributes:['description','price']
             }],
         }],
         where:{
@@ -158,8 +158,8 @@ async function getPOInfo(idpo1){
     if (result==null){
         return result
     }
-
-    return result.dataValues
+    const data = formatPO(result.dataValues)
+    return data
 }
 module.exports={
     createPO,

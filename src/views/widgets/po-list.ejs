@@ -1,0 +1,41 @@
+<table class="table table-striped table-hover">
+    <th>
+    <td>RefDate</td>
+    <td>Pay To</td>
+    <td>Ship To</td>
+    <td>Sub Total</td>
+    <td>Tax</td>
+    <td>Total</td>
+    </th>
+    <% list.forEach(item=> { %>
+        <tr class="listItem" style="cursor:pointer;" item='<%= item.idnumber %>'>
+            <td></td>
+            <td>
+                <%= item.refdate %>
+            </td>
+            <td>
+                <%= item.payto %>
+            </td>
+            <td>
+                <%= item.shipto %>
+            </td>
+            <td>
+                <%= item.subtotal %>
+            </td>
+            <td>
+                <%= item.tax %>
+            </td>
+            <td>
+                <%= item.total %>
+            </td>
+        </tr>
+        <% }) %>
+</table>
+<script type="text/javascript">
+    $(function () {
+        $('.listItem').click(function () {
+            var code = $(this).attr('item')
+            window.location.href = '/po/detail/' + code
+        })
+    })
+</script>
