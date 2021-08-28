@@ -11,6 +11,7 @@ const SCHEMA = {
     properties: {
         code: {
             type: 'string',
+            minLength: 3,
             maxLength: 3
         },
         description: {
