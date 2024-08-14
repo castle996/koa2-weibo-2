@@ -1,0 +1,248 @@
+<%- include('../layout/header', { title: 'PO Detail' })%>
+    <div class="col-md-6 offset-md-3">
+        <div class="alert alert-primary" role="alert" style="margin-top: 20px;">
+            PO #<%= po.idnumber %>
+        </div>
+        <div class="form-group row">
+            <label for="inputEmail3" class="col-sm-3 col-form-label">Ref. Date</label>
+            <div class="col-sm-9">
+                <input type="text" class="form-control" id="txtRefDate" value="<%=po.refdate%>" />
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                <div class="form-group">
+                    <label for="inputPassword3" class="col-form-label">Pay To</label>
+                    <div>
+                        <textarea class="form-control" rows="3" id="txtPayTo"><%=po.payto%></textarea>
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="form-group">
+                    <label for="inputPassword3" class="col-form-label">Ship To</label>
+                    <div>
+                        <textarea class="form-control" rows="3" id="txtShipTo"><%=po.shipto%></textarea>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-1">Code</div>
+            <div class="col-sm-4">Description</div>
+            <div class="col-sm-2">Price</div>
+            <div class="col-sm-2">Quantity</div>
+            <div class="col-sm-2">Amount</div>
+            <div class="col-sm-1"><i class="bi bi-plus-circle-fill" id="btnAddPart"></i></div>
+        </div>
+        <div id="tblListPart">
+            <% po.po2_castles.forEach(po2=>{ %>
+                <div class="partItem row form-group">
+                    <div class="col-1"><input type="text" class="subCode" style="width: 40px;" value="<%=po2.code%>" />
+                    </div>
+                    <div class="col-4 subDescription">
+                        <%=po2.code_parts_castle.description%>
+                    </div>
+                    <div class="col-2 subPrice">
+                        <%=po2.code_parts_castle.price%>
+                    </div>
+                    <div class="col-2"><input type="text" class="subQuantity" style="width: 60px;"
+                            value="<%=po2.quantity%>" /></div>
+                    <div class="col-2 subAmount">
+                        <%=po2.quantity*po2.code_parts_castle.price%>
+                    </div>
+                    <div class="col-1"><i class="bi bi-dash-circle-fill primary removeBtn"></i></div>
+                </div>
+                <% }) %>
+        </div>
+        <div class="col-6 offset-6">
+            <div class="row">
+                <div class="col-6 text-right">
+                    <label for="txtSubTotal" class="col-form-label">Sub Total</label>
+                </div>
+                <div class="col-6">
+                    <input type="text" readonly class="form-control text-right" id="txtSubTotal"
+                        value="<%=po.subtotal%>" />
+                </div>
+            </div>
+        </div>
+        <div class="col-6 offset-6">
+            <div class="row">
+                <div class="col-6 text-right">
+                    <label for="txtTax" class="col-form-label">Tax 8.25%</label>
+                </div>
+                <div class="col-6">
+                    <input type="text" readonly class="form-control text-right" id="txtTax" value="<%=po.tax%>" />
+                </div>
+            </div>
+        </div>
+        <div class="col-6 offset-6">
+            <div class="row">
+                <div class="col-6 text-right">
+                    <label for="txtTotal" class="col-form-label">Total</label>
+                </div>
+                <div class="col-6">
+                    <input type="text" readonly class="form-control text-right" id="txtTotal" value="<%=po.total%>" />
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group row" style="margin-top: 20px;">
+            <div class="col-sm-4">
+                <button type="button" id="btnSubmit" class="btn btn-primary btn-block">Submit</button>
+            </div>
+            <div class="col-sm-4">
+                <button type="button" id="btnDelete" class="btn btn-primary btn-block">Delete</button>
+            </div>
+            <div class="col-sm-4">
+                <button type="button" id="btnCancel" class="btn btn-primary btn-block" onclick="history.back()">Cancel</button>
+            </div>
+        </div>
+    </div>
+    <script>
+        $(function () {
+            var $tblListPart = $('#tblListPart')
+            var $txtSubTotal = $('#txtSubTotal')
+            var $txtTax = $('#txtTax')
+            var $txtTotal = $('#txtTotal')
+            var userNameTimeoutId
+            $('#btnAddPart').click(fnAddPart)
+            $('#btnSubmit').click(savePOs)
+            $('#btnDelete').click(deletePO)
+
+            $('.subCode').on('input', getPartByCode)
+            $('.subQuantity').on('input', calculateTotal)
+            $('.removeBtn').on('click', removeItem)
+
+            $('#txtRefDate').datepicker({
+                format: 'yyyy-mm-dd'
+            });
+
+            function fnAddPart() {
+                var $tr = $('<div class="partItem row form-group">' +
+                    '<div class="col-1"><input type="text" class="subCode" style="width: 40px;" /></div>' +
+                    '<div class="col-4 subDescription"></div>' +
+                    '<div class="col-2 subPrice"></div>' +
+                    '<div class="col-2"><input type="text" class="subQuantity" style="width: 60px;" /></div>' +
+                    '<div class="col-2 subAmount">0</div>' +
+                    '<div class="col-1"><i class="bi bi-dash-circle-fill primary removeBtn"></i></div>'
+                    + '</div>');
+
+                $tr.find('.removeBtn').on('click', removeItem)
+                $tr.find('.subCode').on('input', getPartByCode)
+                $tr.find('.subQuantity').on('input', calculateTotal)
+
+                $tblListPart.append($tr)
+            }
+
+            function removeItem() {
+                var $tr = $(this).parent().parent()
+
+                $tr.remove()
+
+                calculateTotal()
+            }
+
+            function getPartByCode() {
+                if (userNameTimeoutId) {
+                    clearTimeout(userNameTimeoutId)
+                }
+                var codeElem = $(this)
+
+                userNameTimeoutId = setTimeout(function () {
+                    $.ajax({
+                        type: 'GET',
+                        url: '/api/part/get/' + codeElem.val(),
+                        success: function (res) {
+                            var $tr = codeElem.parent().parent()
+                            var result = res.data
+                            $tr.find('.subDescription').html(result.description)
+                                $tr.find('.subPrice').html(result.price)
+                                $tr.find('.subQuantity').val('')
+                                $tr.find('.subAmount').html('0')
+                            
+                        }
+                    })
+                }, 500)
+
+                calculateTotal()
+            }
+
+            function calculateTotal() {
+                var subTotal = 0, tax = 0, total = 0
+                $tblListPart.children('.partItem').each((idx, obj) => {
+                    var $tr = $(obj)
+
+                    var subPice = parseFloat($tr.find('.subPrice').html()) || 0
+                    var subQuantity = parseFloat($tr.find('.subQuantity').val()) || 0
+                    var subAmount = subPice * subQuantity
+                    subTotal = subTotal + subAmount
+
+                    $tr.find('.subAmount').html(subAmount)
+                })
+
+                subTotal = subTotal
+
+                tax = subTotal * 0.0825
+                total = subTotal + tax
+
+                $txtSubTotal.val(subTotal)
+                $txtTax.val(tax)
+                $txtTotal.val(total)
+            }
+
+            function savePOs() {
+                var po2list = []
+                $tblListPart.children('.partItem').each((idx, obj) => {
+                    var $tr = $(obj)
+
+                    var partCode = $tr.find('.subCode').val()
+                    var subQuantity = parseFloat($tr.find('.subQuantity').val())
+
+                    po2list.push({ code: partCode, quantity: subQuantity })
+                })
+
+                var data = {
+                    idpo1: <%- po.idnumber %>,
+                    refdate: $("#txtRefDate").val(),
+                    payto: $("#txtPayTo").val(),
+                    shipto: $("#txtShipTo").val(),
+                    subtotal: parseFloat($("#txtSubTotal").val()),
+                    tax: parseFloat($("#txtTax").val()),
+                    total: parseFloat($("#txtTotal").val()),
+                    po2list
+                }
+
+                $.ajax({
+                    contentType: 'application/json',
+                    type: 'POST',
+                    url: '/api/po/update',
+                    data: JSON.stringify(data),
+                    success: function (res) {
+                        if (res.errno == 0) {
+                            window.location.href = '/'
+                        }
+                    }
+                });
+            }
+        })
+
+        function deletePO() {
+            var data = {
+                idpo1: <%- po.idnumber %>
+            }
+
+            $.ajax({
+                type: 'POST',
+                url: '/api/po/delete',
+                data: data,
+                success: function (res) {
+                    if (res.errno==0){
+                        window.location.href='/'
+                    }
+                }
+            });
+        }
+
+    </script>
+    <%- include('../layout/footer')%>

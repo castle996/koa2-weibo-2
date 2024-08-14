@@ -1,0 +1,36 @@
+<%- include('../layout/header', { title: 'create new parts' })%>
+    <div class="container">
+<a href="/newpart">New Part</a>--------<a href="/">Go to PO</a>
+    <table class="table table-striped table-hover">
+        <th>
+        <td>Code</td>
+        <td>Description</td>
+        <td>Price</td>
+        </th>
+
+
+        <% partList.forEach(parts=> { %>
+            <tr class="listItem" style="cursor:pointer;" item='<%= parts.code %>'>
+                <td></td>
+                <td>
+                    <%= parts.code%>
+                </td>
+                <td>
+                    <%= parts.description%>
+                </td>
+                <td>
+                    <%= parts.price%>
+                </td>
+            </tr>
+            <% }) %>
+    </table>
+</div>
+<script type="text/javascript">
+    $(function () {
+        $('.listItem').click(function () {
+            var code = $(this).attr('item')
+            window.location.href = '/detailpart/' + code
+        })
+    })
+</script>
+    <%- include('../layout/footer')%>
